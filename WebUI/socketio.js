@@ -37,18 +37,23 @@ var udp_server = dgram.createSocket('udp4', function(msg, rinfo) {
   }
 
   if(osc_message.address == '/tempo') {
-    console.log('OSC Message : tempo');
+    //console.log('OSC Message : tempo');
   	io.emit('tempo', 1);
   }
 
   if(osc_message.address == '/tempoBar') {
-    console.log('OSC Message : tempoBar');
+    //console.log('OSC Message : tempoBar');
   	io.emit('tempoBar', 1);
   }
 
   if(osc_message.address == '/ready_to_record') {
     console.log('OSC Message : channel %d ready_to_record', osc_message.args[0].value);
   	io.emit('ready_to_record', osc_message.args[0].value);
+  }
+
+    if(osc_message.address == '/ready_to_stop_record') {
+    console.log('OSC Message : channel %d ready to stop record', osc_message.args[0].value);
+  	io.emit('ready_to_stop_record', osc_message.args[0].value);
   }
 
     if(osc_message.address == '/ready_to_play') {
@@ -59,6 +64,10 @@ var udp_server = dgram.createSocket('udp4', function(msg, rinfo) {
     if(osc_message.address == '/ready_to_stop') {
     console.log('OSC Message : channel %d ready_to_stop', osc_message.args[0].value);
   	io.emit('ready_to_stop', osc_message.args[0].value);
+  }
+    if(osc_message.address == '/ready_to_delete') {
+    console.log('OSC Message : channel %d ready_to_delete', osc_message.args[0].value);
+  	io.emit('ready_to_delete', osc_message.args[0].value);
   }
     
     if(osc_message.address == '/start_rec') {
@@ -156,6 +165,15 @@ io.on('connection', function(socket) {
   	var osc_msg = osc.toBuffer({
       oscType: 'message',
       address: '/'+data.toString()+'/play'
+    });
+    udp_server.send(osc_msg, 0, osc_msg.length, 9999, remote_osc_ip);
+  });
+
+   socket.on('delete', function(data){
+  	console.log('delete channel: %d', data);
+  	var osc_msg = osc.toBuffer({
+      oscType: 'message',
+      address: '/'+data.toString()+'/delete'
     });
     udp_server.send(osc_msg, 0, osc_msg.length, 9999, remote_osc_ip);
   });

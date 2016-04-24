@@ -28,12 +28,12 @@ socket.on('ready_to_play', function(data){
         channel1.ready_to_play();
         break;
     case 2:
+        channel2.ready_to_play();
+        break;
+    case 3:
         
         break;
-    case 2:
-        
-        break;
-    case 2:
+    case 4:
         
         break;
 }
@@ -46,16 +46,62 @@ socket.on('ready_to_stop', function(data){
         channel1.ready_to_stop();
         break;
     case 2:
+        channel2.ready_to_stop();
+        break;
+    case 3:
         
         break;
-    case 2:
-        
-        break;
-    case 2:
+    case 4:
         
         break;
 }
   });
+
+socket.on('ready_to_record', function(data){
+  console.log(' channel %d, now is recording', data);
+  switch(data) {
+    case 2:
+        channel2.ready_to_record();
+        break;
+    case 3:
+        
+        break;
+    case 4:
+        
+        break;
+}
+  });
+
+socket.on('ready_to_stop_record', function(data){
+  console.log(' channel %d, now ended recording', data);
+  switch(data) {
+    case 2:
+        channel2.ready_to_stop_record();
+        break;
+    case 3:
+        
+        break;
+    case 4:
+        
+        break;
+}
+  });
+
+socket.on('ready_to_delete', function(data){
+  console.log(' channel %d, now deleted !', data);
+  switch(data) {
+    case 2:
+        channel2.ready_to_delete();
+        break;
+    case 3:
+        
+        break;
+    case 4:
+        
+        break;
+}
+  });
+
 
 
 
@@ -108,7 +154,7 @@ var channel1 = new Vue({
         this.isLoopPlaying = true;
         this.isRecording = false;
         this.bouton_rec ='';
-        this.bouton_play = 'stop';
+        this.bouton_play = 'mute';
         //send web socket
         socket.emit('stop_rec', this.id)
         // Set that the tempo is now fixed
@@ -146,7 +192,7 @@ var channel1 = new Vue({
    
     },
     ready_to_play: function(){
-        this.bouton_play = 'stop';
+        this.bouton_play = 'mute';
         this.isLoopPlaying = true;
     },
     ready_to_stop: function(){
@@ -176,7 +222,7 @@ var channel2 = new Vue({
       isRecording: false,
       isLoopRecorded : false,
       isLoopPlaying : false,
-      id : 1
+      id : 2
       }, 
   methods : {
     record: function(){
@@ -184,36 +230,94 @@ var channel2 = new Vue({
       if(this.isRecording && !this.isLoopRecorded && this.isTempoFixed){
         this.isLoopRecorded = true;
         this.isLoopPlaying = true;
-        this.isRecording = false;
-        this.bouton_rec ='';
-        this.bouton_play = 'stop';
-        this.bouton_del = 'delete';
+        this.isRecording = true;
+        this.waiting_msg = 'waiting to stop record...';
+        this.bouton_rec ='...waiting...';
+
         //send OSC
-        socket.emit('stop_record', id)
+        socket.emit('stop_rec', this.id)
 
       }
       if(!this.isLoopRecorded && this.isTempoFixed){
         this.bouton_rec= '... waiting...';
         this.waiting_msg = '...waiting to record...';
         //send OSC
-        socket.emit('record', id)
+        socket.emit('start_rec', this.id)
       }
 
       
     
     },
   ready_to_record: function(){
+        if(!this.isRecording && !this.isLoopRecorded){
         this.isRecording = true;
         this.bouton_rec= 'stop record';
+        this.waiting_msg ='';}
 
+  },
+  ready_to_stop_record: function(){
+        if(this.isRecording){
+        this.isRecording = false;
+        this.bouton_rec= '';
+        this.bouton_play = 'stop';
+        this.bouton_del = 'delete';
+        this.waiting_msg ='';}
+  },
+  ready_to_delete: function(){
+        if(this.isLoopRecorded){
+        this.isRecording = false;
+        this.bouton_rec= '';
+        this.bouton_play = '';
+        this.bouton_del = '';
+        this.waiting_msg ='';
+        this.isRecording= false;
+        this.isLoopRecorded = false;
+        this.isLoopPlaying = false;
+        if(this.isTempoFixed){
+          this.tempo_fixed();
+        }
+
+      }
   },
 
   delete: function(){
-      socket.emit('delete', id)
+      if(this.isLoopRecorded ){
+        socket.emit('delete', this.id);
+        this.bouton_rec = '...waiting...';
+        this.bouton_play= '...waiting...';
+        this.waiting_msg= ' Clearing the track soon';
+        this.bouton_del= '...waiting';
+
+      }
     },
   play: function(){
-      socket.emit('play', id)
+      value = false;
+
+      if(this.isLoopRecorded && this.isLoopPlaying){
+          this.bouton_play = 'waiting ...';
+          this.waiting_msg = 'waiting the end of bar before stopping';
+          value = false;
+          socket.emit('stop', this.id);
+      }
+      if(this.isLoopRecorded && !this.isLoopPlaying){
+        this.bouton_play = 'waiting ...';
+        this.waiting_msg = 'waiting the end of bar before playing';
+        value = true;
+        socket.emit('play', this.id);
+      }
   },
+  ready_to_stop: function(){
+      if(this.isLoopRecorded){
+        this.bouton_play = 'play';
+        this.isLoopPlaying = false;
+        this.waiting_msg = '';}
+    },
+  ready_to_play: function(){
+      if(this.isLoopRecorded){  
+        this.bouton_play = 'stop';
+        this.isLoopPlaying = true;
+        this.waiting_msg = '';}
+    },
   // Called when the tempo is fised from the main channel, and allowed this channel beeing active
   tempo_fixed: function(){
     this.isTempoFixed = true;
