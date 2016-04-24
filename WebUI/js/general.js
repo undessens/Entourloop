@@ -1,19 +1,64 @@
 
 Vue.config.delimiters = ['[[', ']]']
 
-var socket = io.connect('http://0.0.0.0:8080');
+var socket = io.connect('http://127.0.0.1:8080');
 
+// List of OSC Event arriving from PUREDATA
 
 socket.on('tempo', function(socket){
-  console.log('menu victory ');
-  menu.switch_tempo();
+  console.log('Global Loop tempo changed');
+  menu.main_tempo = !menu.main_tempo;});   
 
-});   
+socket.on('tempoBar', function(socket){
+  console.log('Tempo Bar changed');
+  menu.main_bar = !menu.main_bar;});   
 
-socket.on('truc', function(socket){
-  console.log('truc victory ');
+// socket.on('tempoFixed', function(socket){
+//   console.log('Tempo is fixed');
+//   menu.tempo_fixed = True;});   
 
-});    
+// socket.on('clear_all', function(socket){
+//   console.log('clear_all reset everything !');
+//   });
+
+socket.on('ready_to_play', function(data){
+  console.log(' channel %d, now is playing ', data);
+  switch(data) {
+    case 1:
+        channel1.ready_to_play();
+        break;
+    case 2:
+        
+        break;
+    case 2:
+        
+        break;
+    case 2:
+        
+        break;
+}
+  });
+
+socket.on('ready_to_stop', function(data){
+  console.log(' channel %d, now is stopped', data);
+  switch(data) {
+    case 1:
+        channel1.ready_to_stop();
+        break;
+    case 2:
+        
+        break;
+    case 2:
+        
+        break;
+    case 2:
+        
+        break;
+}
+  });
+
+
+
 
 
 
@@ -29,9 +74,9 @@ var menu = new Vue({
       delete_all: function(){
         //this.main_tempo = !this.main_tempo;
         //this.main_bar =!this.main_bar;
-        console.log('emit delete_all');
-        socket.emit('menu', this.id)
-        console.log('emited');
+        console.log('emitt delete_all');
+        socket.emit('delete_all', 9);
+        console.log('emited delete_all');
 
 
       }, 
@@ -64,11 +109,10 @@ var channel1 = new Vue({
         this.isRecording = false;
         this.bouton_rec ='';
         this.bouton_play = 'stop';
-        //send OSC 
-        console.log('emit stop_rec');
+        //send web socket
         socket.emit('stop_rec', this.id)
-        console.log('emited');
         // Set that the tempo is now fixed
+        //TODO set other channels than channel 2
         channel2.tempo_fixed();
         menu.tempo_fixed = true;
 
@@ -89,23 +133,21 @@ var channel1 = new Vue({
       value = false;
 
       if(this.isLoopRecorded && this.isLoopPlaying){
-          this.bouton_play = 'play';
+          this.bouton_play = 'waiting ...';
           value = false;
-          console.log('fonction play : play');
           socket.emit('stop', this.id);
-          console.log('emited');
       }
       if(this.isLoopRecorded && !this.isLoopPlaying){
-        this.bouton_play = 'stop';
+        this.bouton_play = 'waiting ...';
         value = true;
-        console.log('fonction play : stop');
         socket.emit('play', this.id);
-        console.log('fonction play : emited');
       }
 
-      this.isLoopPlaying = value;
-
-      
+   
+    },
+    ready_to_play: function(){
+        this.bouton_play = 'stop';
+        this.isLoopPlaying = true;
     },
     ready_to_stop: function(){
         this.bouton_play = 'play';

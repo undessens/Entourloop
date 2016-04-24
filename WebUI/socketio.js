@@ -1,13 +1,16 @@
-var http = require('http'),
-    socketio = require('socket.io'),
-    fs = require('fs'),
-    osc = require('osc-min'),
-    dgram = require('dgram'),
-    vue = require('vue'),
-    remote_osc_ip;
+var app = require('http').createServer(handler)
+var io = require('socket.io')(app);
+var fs = require('fs');
+var osc = require('osc-min');
+var dgram = require('dgram');
+var vue = require('vue');
+var remote_osc_ip;
+
+app.listen(8080);
+console.log('Starting HTTP server on TCP port 8080');
 
 
-var http_server = http.createServer(function(req, res) {
+function handler (req, res){
 
   fs.readFile(__dirname + '/index.html', function(err, data) {
 
@@ -21,10 +24,9 @@ var http_server = http.createServer(function(req, res) {
 
   });
 
-});
+}
 
-var io = socketio(http_server);
-
+//Creation of OSC server - with list of OSC message received
 var udp_server = dgram.createSocket('udp4', function(msg, rinfo) {
 
   var osc_message;
@@ -34,23 +36,70 @@ var udp_server = dgram.createSocket('udp4', function(msg, rinfo) {
     return console.log('Could not decode OSC message');
   }
 
-  if(osc_message.address != '/puredata') {
-    return console.log('Invalid OSC address');
+  if(osc_message.address == '/tempo') {
+    console.log('OSC Message : tempo');
+  	io.emit('tempo', 1);
+  }
+
+  if(osc_message.address == '/tempoBar') {
+    console.log('OSC Message : tempoBar');
+  	io.emit('tempoBar', 1);
+  }
+
+  if(osc_message.address == '/ready_to_record') {
+    console.log('OSC Message : channel %d ready_to_record', osc_message.args[0].value);
+  	io.emit('ready_to_record', osc_message.args[0].value);
+  }
+
+    if(osc_message.address == '/ready_to_play') {
+    console.log('OSC Message : channel %d ready_to_play', osc_message.args[0].value);
+  	io.emit('ready_to_play', osc_message.args[0].value);
+  }
+
+    if(osc_message.address == '/ready_to_stop') {
+    console.log('OSC Message : channel %d ready_to_stop', osc_message.args[0].value);
+  	io.emit('ready_to_stop', osc_message.args[0].value);
+  }
+    
+    if(osc_message.address == '/start_rec') {
+    console.log('OSC Message : channel %d start_rec', osc_message.args[0].value);
+  	io.emit('start_rec', osc_message.args[0].value);
+  }
+     
+    if(osc_message.address == '/stop_rec') {
+    console.log('OSC Message : channel %d stop_rec', osc_message.args[0].value);
+  	io.emit('stop_rec', osc_message.args[0].value);
+  }
+    
+    if(osc_message.address == '/stop') {
+    console.log('OSC Message : channel %d stop', osc_message.args[0].value);
+  	io.emit('stop', osc_message.args[0].value);
+  }
+    
+    if(osc_message.address == '/play') {
+    console.log('OSC Message : channel %d play', osc_message.args[0].value);
+  	io.emit('play', osc_message.args[0].value);
+  }
+
+    if(osc_message.address == '/delete') {
+    console.log('OSC Message : channel %d delete', osc_message.args[0].value);
+  	io.emit('delete', osc_message.args[0].value);
   }
 
   remote_osc_ip = rinfo.address;
-  console.log('OSC Message');
-  io.emit('tempo', 1);
+  
 
 });
 
 io.on('connection', function(socket) {
 
-  socket.on('browser', function(data) {
+// if(! remote_osc_ip) {
+//       return;
+//     }
 
-    if(! remote_osc_ip) {
-      return;
-    }
+  	socket.on('browser', function(data) {
+
+    
 
     var osc_msg = osc.toBuffer({
       oscType: 'message',
@@ -70,10 +119,51 @@ io.on('connection', function(socket) {
 
   });
 
+  socket.on('delete_all', function(data){
+    console.log('delete all %d', data);
+
+  });
+
+  socket.on('start_rec', function(data){
+  	console.log('record channel: %d', data);
+  	var osc_msg = osc.toBuffer({
+      oscType: 'message',
+      address: '/'+data.toString()+'/start_rec'
+    });
+    udp_server.send(osc_msg, 0, osc_msg.length, 9999, remote_osc_ip);
+  });
+
+  socket.on('stop_rec', function(data){
+  	console.log('stop record channel: %d', data);
+  	var osc_msg = osc.toBuffer({
+      oscType: 'message',
+      address: '/'+data.toString()+'/stop_rec'
+    });
+    udp_server.send(osc_msg, 0, osc_msg.length, 9999, remote_osc_ip);
+  });
+
+   socket.on('stop', function(data){
+  	console.log('stop channel: %d', data);
+  	var osc_msg = osc.toBuffer({
+      oscType: 'message',
+      address: '/'+data.toString()+'/stop'
+    });
+    udp_server.send(osc_msg, 0, osc_msg.length, 9999, remote_osc_ip);
+  });
+
+   socket.on('play', function(data){
+  	console.log('play channel: %d', data);
+  	var osc_msg = osc.toBuffer({
+      oscType: 'message',
+      address: '/'+data.toString()+'/play'
+    });
+    udp_server.send(osc_msg, 0, osc_msg.length, 9999, remote_osc_ip);
+  });
+
 });
 
-http_server.listen(8080);
-console.log('Starting HTTP server on TCP port 8080');
+
+
 udp_server.bind(9998);
 console.log('Starting UDP server on UDP port 9998');
 
