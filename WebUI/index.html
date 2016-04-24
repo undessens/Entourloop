@@ -1,0 +1,112 @@
+<!doctype html>
+<html ng-app="myapp">
+<head>
+
+<script src="js/vue.min.js"></script>
+<script src="js/socket.io.js"></script>
+
+<link rel="stylesheet" type="text/css" href="css/style.css" media="screen" /
+
+</head>
+
+<body>
+
+
+<br>
+<center>
+<div class="banner">
+	<p><img class="banner image" src="images/logoshort.png"><H1> Entourloop :::: Puredata</H1></p>
+	<p> 4 channels DIY looper, with lot of custom effect </p>
+</div>
+<!---
+<div id="selectInput">
+
+	</center>
+	<select v-model="selected">
+
+  		<option v-for="choice in choices" v-bind:value="choice.value"> [[ choice.text ]]</option>
+  		
+	</select>
+<span>Choisi ta piste: [[ selected ]]</span>
+	
+</div>
+<br>
+<div id="check-tempo">
+
+	<span for="jack"> Record</span><br>
+	<input type="checkbox" v-model="isRecording">
+	<br>
+	<span>State: [[ isRecording | json ]]</span>
+
+</div>
+<br>
+/!-->
+
+<br>
+
+<table  >
+	<tr>
+		<td  class="menu"><b> Menu </b>
+			<div  id="menu">
+				<br><br>
+				<span > Tempo_fixed</span>
+				<input type="checkbox" v-model="tempo_fixed"><br><br>
+				<button v-on:click="delete_all"> [[bouton_delete]]</button><br><br>
+				<span> Loop main</span>
+				<input type="radio" v-model="main_tempo" value=1>
+				<input type="radio" v-model="main_tempo" value=0><br><br>
+				<span>  Global Bar</span>
+				<input type="radio" v-model="main_bar" value=1>
+				<input type="radio" v-model="main_bar" value=0>
+				
+
+			</div>
+		</td>
+		<td  class="channel_master"><b> Channel 1 </b>
+			<div id="channel1"><br><br>
+			<input type="checkbox" v-model="isRecording" disabled>
+			<span > Recording</span><br>
+			<input type="checkbox" v-model="isLoopRecorded" disabled>
+			<span > Loop Recorded</span><br>	
+			<input type="checkbox" v-model="isLoopPlaying" disabled>
+			<span > Loop Playing</span><br><br>
+			<center>
+			<button v-on:click="record">[[ bouton_rec ]]</button><br><br>
+			<button v-on:click="play">[[ bouton_play ]]</button><br><br>
+			
+			</div>
+		</td>
+		<td class="channel_slave"><b> Channel 2 </b> 
+			<div id="channel2">
+			<span > [[ waiting_msg ]]</span><br><br>
+			<input type="checkbox" v-model="isRecording" disabled >
+			<span > Recording</span><br>
+			<input type="checkbox" v-model="isLoopRecorded" disabled>
+			<span > Loop Recorded</span><br>
+			<input type="checkbox" v-model="isLoopPlaying" disabled>
+			<span > Loop Playing</span><br><br>
+			<center>
+			<button v-on:click="record">[[ bouton_rec ]]</button><br><br>
+			<button v-on:click="play">[[ bouton_play ]]</button><br><br>
+			<button v-on:click="delete">[[ bouton_del ]]</button><br><br>
+			</div>
+			
+		</td>
+		<td class="channel_slave"><b> Channel 3 </b> 
+			
+		</td>
+		<td class="channel_slave"><b> Channel 4 </b> 
+			
+		</td>
+
+	</tr>
+	
+</table>
+
+
+
+<script src="js/general.js"></script>
+
+</body>
+
+</html>
