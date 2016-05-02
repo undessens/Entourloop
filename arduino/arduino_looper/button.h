@@ -46,7 +46,7 @@ void button::update(){
  //Invert digitalRead, because pull_up mode force HIGH when button is not pressed
   boolean newCurrentState = !digitalRead(numPin);
   int previous_change_duration = millis() -previous_change ;
-  int avoid_repet = 30;
+  int avoid_repet = 20;
  
  if(newCurrentState && !currentState && previous_change_duration > avoid_repet){
  // button just become pressed
@@ -107,7 +107,6 @@ boolean button::readLongPressed(){
   boolean ret = longPressed;
   if(longPressed){
    //clear value once it is read
-    init();
   }
 
  return ret; 

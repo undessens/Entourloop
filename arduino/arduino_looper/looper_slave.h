@@ -33,8 +33,8 @@ public:
   void ready_to_delete();
   
   //Serial
-  void sendMessage(String t);
-  void readMessage(String t);
+  void sendMessage(int t);
+  void readMessage(int m);
   
   //Be sure the tempo is fixed by channel1 before recording 
   //other channels
@@ -76,30 +76,30 @@ void looper_slave::update(){
    
    if(!isLoopRecorded && !isLoopRecording){
       if(but->readJustPressed()){
-        sendMessage("start_rec"); 
+        sendMessage(START_REC); 
       }
    }
    if(!isLoopRecorded && isLoopRecording){
      
        if(but->readJustPressed()){
-        sendMessage("stop_rec"); 
+        sendMessage(STOP_REC); 
       }
    }
    if(isLoopRecorded && !isLoopRecording && !isLoopPlaying){
        if(but->readShortPressed()){
-        sendMessage("play"); 
+        sendMessage(PLAY); 
       }
        if(but->readLongPressed()){
-        sendMessage("delete"); 
+        sendMessage(DELETE); 
       }
      
    }
    if(isLoopRecorded && !isLoopRecording && isLoopPlaying){
        if(but->readShortPressed()){
-        sendMessage("stop"); 
+        sendMessage(STOP); 
       }
        if(but->readLongPressed()){
-        sendMessage("delete"); 
+        sendMessage(DELETE); 
       }
      
    }
@@ -117,7 +117,8 @@ void looper_slave::record(){
   // the channel is not recording yet, waiting until ready_to_record
   ledR->ledBlink();
   ledG->stopBlink();
-  isLoopRecording = true;
+  
+  isLoopRecording = false;
   isLoopRecorded = false;
   isLoopPlaying = false;
 
@@ -133,9 +134,10 @@ void looper_slave::stop_record(){
 void looper_slave::ready_to_record(){
   ledR->ledBlink(200);
   ledG->stopBlink();
-  isLoopRecording = false;
+  isLoopRecording = true;
   isLoopRecorded = false;
   isLoopPlaying = false;
+  but->init();
 
 }
 void looper_slave::ready_to_stop_record(){
@@ -144,6 +146,7 @@ void looper_slave::ready_to_stop_record(){
   isLoopRecording = false;
   isLoopRecorded = true;
   isLoopPlaying = true;
+  but->init();
 
 }
 void looper_slave::play(){
@@ -163,6 +166,7 @@ void looper_slave::ready_to_play(){
   isLoopRecording = false;
   isLoopRecorded = true;
   isLoopPlaying = true;
+  but->init();
   
 }
 void looper_slave::stop(){
@@ -180,6 +184,7 @@ void looper_slave::ready_to_stop(){
   isLoopRecording = false;
   isLoopRecorded = true;
   isLoopPlaying = false;
+  but->init();
 }
 
 void looper_slave::delete_loop(){
@@ -187,12 +192,14 @@ void looper_slave::delete_loop(){
   ledR->ledBlink(200);
   ledG->ledBlink(200);
   isLoopRecording = false;
-  isLoopRecorded = true;
+  //TODO
+  isLoopRecorded = false;
 
 }
 void looper_slave::ready_to_delete(){
   ledR->turnOff();
   ledG->turnOff();
+  but->init();
   init();
 
 
@@ -202,58 +209,54 @@ void looper_slave::tempo_fixed(){
   isTempoFixed = true;
 }
 
-void looper_slave::sendMessage(String msg){
+void looper_slave::sendMessage(int msg){
   
- // First letter is the channel, then the msg
- String finalMsg = String(channel) + msg;
 
- Serial.println(finalMsg);
+ Serial.print(char(channel + '0'));
+ Serial.println(char(msg + '0'));
   
 }
 
-void looper_slave::readMessage(String msg){
+//Translate int into specific message and associated function
+void looper_slave::readMessage(int  msg){
  
   
   
-    if (msg == "start_rec"){
+  switch(msg){
+  
+    case START_REC:
       record(); 
-     Serial.println("Victory start-rec");   
-    }
-    if (msg == "stop_rec"){
-        stop_record(); 
-       Serial.println("Victory stop-rec");  
-    }
-    if (msg =="ready_to_record"){
-        ready_to_record();    
-        Serial.println("Victory ready_to_record"); 
-    }
-    if (msg =="ready_to_stop_record"){
-        ready_to_stop_record();    
-    }
-    if(msg == "play"){  
-      Serial.println("Victory rplay"); 
+      break;
+    case READY_TO_RECORD:
+      ready_to_record(); 
+      break;
+    case STOP_REC:
+      stop_record();   
+      break;
+    case READY_TO_STOP_RECORD:
+      ready_to_stop_record();   
+      break;
+    case PLAY:
       play();
-    }
-    if (msg =="ready_to_play"){
-        ready_to_play();
-        Serial.println("Victory ready_to_play"); 
-    }
-    if (msg =="stop"){
-        stop();
-        Serial.println("Victory stop"); 
-    }
-    if (msg =="ready_to_stop"){
-        ready_to_stop();
-        Serial.println("Victory ready_to_stop"); 
-    }
-    if (msg =="delete"){
-        delete_loop();
-        Serial.println("Victory delete"); 
-    }
-    if (msg =="ready_to_delete"){
-        ready_to_delete();
-        Serial.println("Victory ready_to_delete"); 
-    }
+      break;
+    case READY_TO_PLAY:
+      ready_to_play();
+      break;
+    case STOP:
+      stop(); 
+      break;
+    case READY_TO_STOP:
+      ready_to_stop();
+      break;
+    case DELETE:
+      delete_loop();
+      break;
+    case READY_TO_DELETE:
+      ready_to_delete();
+      break;
+    
+    
+  }
       
   
   

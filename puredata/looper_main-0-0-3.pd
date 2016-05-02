@@ -1,15 +1,15 @@
-#N canvas -56 194 1104 641 10;
+#N canvas 181 75 1104 641 10;
 #X obj 53 -164 inlet;
-#X obj 45 -50 cnv 15 100 130 empty empty empty 20 12 0 14 -249661 -66577
+#X obj 45 -50 cnv 15 100 130 empty empty empty 20 12 0 14 -260097 -66577
 0;
 #X obj 53 14 timer;
-#X obj 9 124 cnv 15 280 250 empty empty empty 20 12 0 14 -249661 -66577
+#X obj 9 124 cnv 15 280 250 empty empty empty 20 12 0 14 -232576 -66577
 0;
 #X msg 61 166 stop;
 #X obj 192 243 tabwrite~ \$0-tab;
 #X msg 21 167 start;
-#X text 68 143 write loop;
-#X obj 155 -47 cnv 15 60 50 empty empty empty 20 12 0 14 -249661 -66577
+#X text 116 126 write loop;
+#X obj 155 -47 cnv 15 60 50 empty empty empty 20 12 0 14 -260097 -66577
 0;
 #X obj 164 -24 t b b;
 #N canvas 328 244 450 250 (subpatch) 0;
@@ -20,7 +20,7 @@
 0;
 #X obj 398 387 cnv 15 100 60 empty empty empty 20 12 0 14 -233017 -66577
 0;
-#X obj 249 415 tgl 35 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+#X obj 249 415 tgl 35 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
 1;
 #X msg 10 272 1;
 #X msg 47 273 0;
@@ -29,22 +29,22 @@
 #X obj 533 386 cnv 15 100 90 empty empty empty 20 12 0 14 -233017 -66577
 0;
 #X obj 565 409 tgl 35 0 empty \$0_is_loop_playing empty 17 7 0 10 -262144
--1 -1 1 1;
+-1 -1 0 1;
 #X obj 655 383 cnv 15 100 60 empty empty empty 20 12 0 14 -233017 -66577
 0;
-#X obj 699 410 tgl 35 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+#X obj 699 410 tgl 35 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
 1;
 #X text 168 -44 STOP rec;
 #X text 77 -47 START rec;
-#X obj 235 -47 cnv 15 100 60 empty empty empty 20 12 0 14 -233017 -66577
+#X obj 235 -47 cnv 15 100 60 empty empty empty 20 12 0 14 -260097 -66577
 0;
-#X obj 354 -47 cnv 15 100 60 empty empty empty 20 12 0 14 -233017 -66577
+#X obj 354 -46 cnv 15 100 60 empty empty empty 20 12 0 14 -260097 -66577
 0;
 #X text 258 -45 play loop;
 #X text 371 -46 stop loop;
 #X msg 260 -26 1;
 #X msg 383 -28 0;
-#X obj 475 -48 cnv 15 100 60 empty empty empty 20 12 0 14 -233017 -66577
+#X obj 475 -48 cnv 15 100 60 empty empty empty 20 12 0 14 -260097 -66577
 0;
 #X text 498 -46 kill main;
 #X text 536 384 Is loop playing;
@@ -61,7 +61,7 @@
 #X obj 154 302 s \$0_is_loop_recorded;
 #X obj 155 324 s \$0_is_loop_playing;
 #X obj 156 351 s \$0_contrainst;
-#X obj 600 -112 cnv 15 350 490 empty empty empty 20 12 0 14 -233017
+#X obj 600 -112 cnv 15 350 490 empty empty empty 20 12 0 14 -262130
 -66577 0;
 #X obj 781 210 * 44.1;
 #X obj 705 247 pack 0 f;
@@ -136,6 +136,7 @@
 #X obj -10 -122 symbol;
 #X obj 1140 78 t b f;
 #X obj 129 197 t b a;
+#X text 642 -104 Play Loop;
 #X connect 0 0 96 0;
 #X connect 0 0 112 0;
 #X connect 2 0 38 0;
