@@ -21,6 +21,24 @@ socket.on('tempoBar', function(socket){
 //   console.log('clear_all reset everything !');
 //   });
 
+socket.on('play', function(data){
+  console.log(' channel %d, want to play ', data);
+  switch(data) {
+    case 1:
+        channel1.play();
+        break;
+    case 2:
+        channel2.play();
+        break;
+    case 3:
+        
+        break;
+    case 4:
+        
+        break;
+}
+  });
+
 socket.on('ready_to_play', function(data){
   console.log(' channel %d, now is playing ', data);
   switch(data) {
@@ -29,6 +47,24 @@ socket.on('ready_to_play', function(data){
         break;
     case 2:
         channel2.ready_to_play();
+        break;
+    case 3:
+        
+        break;
+    case 4:
+        
+        break;
+}
+  });
+
+socket.on('stop', function(data){
+  console.log(' channel %d, want to stop ', data);
+  switch(data) {
+    case 1:
+        channel1.stop();
+        break;
+    case 2:
+        channel2.stop();
         break;
     case 3:
         
@@ -87,11 +123,61 @@ socket.on('ready_to_stop_record', function(data){
 }
   });
 
+socket.on('delete', function(data){
+  console.log(' channel %d, want to delete !', data);
+  switch(data) {
+    case 2:
+        channel2.delete();
+        break;
+    case 3:
+        
+        break;
+    case 4:
+        
+        break;
+}
+  });
 socket.on('ready_to_delete', function(data){
   console.log(' channel %d, now deleted !', data);
   switch(data) {
     case 2:
         channel2.ready_to_delete();
+        break;
+    case 3:
+        
+        break;
+    case 4:
+        
+        break;
+}
+  });
+
+socket.on('start_rec', function(data){
+  console.log(' channel %d, start_rec', data);
+  switch(data) {
+    case 1:
+        channel1.record();
+
+    case 2:
+        channel2.record();
+        break;
+    case 3:
+        
+        break;
+    case 4:
+        
+        break;
+}
+  });
+
+socket.on('stop_rec', function(data){
+  console.log(' channel %d, stop_rec', data);
+  switch(data) {
+    case 1:
+        channel1.stop_record();
+
+    case 2:
+        channel2.stop_record();
         break;
     case 3:
         
@@ -148,48 +234,56 @@ var channel1 = new Vue({
   }, 
   methods : {
     //MAIN LOOPER : button record function
+    // The button action has no influence on the webUI
+    //Just send info to puredata, and puredata trigger record
+    // function on the webUI
+    record_button: function(){
+      if(!this.isLoopRecorded){
+          socket.emit('start_rec', this.id);
+      }
+      if(this.isRecording && !this.isLoopRecorded){
+        //send web socket
+        socket.emit('stop_rec', this.id)
+      }
+
+    },
     record: function(){
+      if(!this.isLoopRecorded){
+        this.bouton_rec= 'stop record';
+        this.isRecording = true;
+      }
+ 
+    },
+    stop_record: function(){
       if(this.isRecording && !this.isLoopRecorded){
         this.isLoopRecorded = true;
         this.isLoopPlaying = true;
         this.isRecording = false;
         this.bouton_rec ='';
         this.bouton_play = 'mute';
-        //send web socket
-        socket.emit('stop_rec', this.id)
         // Set that the tempo is now fixed
         //TODO set other channels than channel 2
         channel2.tempo_fixed();
-        menu.tempo_fixed = true;
-
-      }
-      if(!this.isLoopRecorded){
-        this.bouton_rec= 'stop record';
-        this.isRecording = true;
-        //send OSC
-        console.log('emit start_rec');
-        socket.emit('start_rec', this.id)
-        console.log('emited');
-      }
-
-      
+        menu.tempo_fixed = true;}
     },
-    //MAIN LOOPER : button stop / play function
-    play: function(){
-      value = false;
-
+    //MAIN LOOPER : 
+    // The button action has no influence on the webUI
+    //Just send info to puredata, and puredata trigger play
+    // function on the webUI
+    play_button: function(){
       if(this.isLoopRecorded && this.isLoopPlaying){
-          this.bouton_play = 'waiting ...';
-          value = false;
           socket.emit('stop', this.id);
       }
       if(this.isLoopRecorded && !this.isLoopPlaying){
-        this.bouton_play = 'waiting ...';
-        value = true;
         socket.emit('play', this.id);
       }
 
-   
+    },
+    play: function(){
+        this.bouton_play = 'waiting ...';
+    },
+    stop: function(){
+        this.bouton_play = 'waiting ...';
     },
     ready_to_play: function(){
         this.bouton_play = 'mute';
@@ -225,8 +319,26 @@ var channel2 = new Vue({
       id : 2
       }, 
   methods : {
+    record_button: function(){
+      if(this.isRecording && !this.isLoopRecorded && this.isTempoFixed){
+
+        socket.emit('stop_rec', this.id)
+
+      }
+      if(!this.isLoopRecorded && this.isTempoFixed){
+
+        socket.emit('start_rec', this.id)
+      }
+    },
     record: function(){
 
+      if(!this.isLoopRecorded && this.isTempoFixed){
+        this.bouton_rec= '... waiting...';
+        this.waiting_msg = '...waiting to record...';
+      }
+
+    },
+    stop_record: function(){
       if(this.isRecording && !this.isLoopRecorded && this.isTempoFixed){
         this.isLoopRecorded = true;
         this.isLoopPlaying = true;
@@ -234,19 +346,7 @@ var channel2 = new Vue({
         this.waiting_msg = 'waiting to stop record...';
         this.bouton_rec ='...waiting...';
 
-        //send OSC
-        socket.emit('stop_rec', this.id)
-
       }
-      if(!this.isLoopRecorded && this.isTempoFixed){
-        this.bouton_rec= '... waiting...';
-        this.waiting_msg = '...waiting to record...';
-        //send OSC
-        socket.emit('start_rec', this.id)
-      }
-
-      
-    
     },
   ready_to_record: function(){
         if(!this.isRecording && !this.isLoopRecorded){
@@ -263,47 +363,29 @@ var channel2 = new Vue({
         this.bouton_del = 'delete';
         this.waiting_msg ='';}
   },
-  ready_to_delete: function(){
-        if(this.isLoopRecorded){
-        this.isRecording = false;
-        this.bouton_rec= '';
-        this.bouton_play = '';
-        this.bouton_del = '';
-        this.waiting_msg ='';
-        this.isRecording= false;
-        this.isLoopRecorded = false;
-        this.isLoopPlaying = false;
-        if(this.isTempoFixed){
-          this.tempo_fixed();
-        }
-
-      }
-  },
-
-  delete: function(){
-      if(this.isLoopRecorded ){
-        socket.emit('delete', this.id);
-        this.bouton_rec = '...waiting...';
-        this.bouton_play= '...waiting...';
-        this.waiting_msg= ' Clearing the track soon';
-        this.bouton_del= '...waiting';
-
-      }
-    },
-  play: function(){
-      value = false;
-
+  play_button: function(){
       if(this.isLoopRecorded && this.isLoopPlaying){
-          this.bouton_play = 'waiting ...';
-          this.waiting_msg = 'waiting the end of bar before stopping';
-          value = false;
-          socket.emit('stop', this.id);
+
+        socket.emit('stop', this.id);
       }
+      if(this.isLoopRecorded && !this.isLoopPlaying){
+ 
+        socket.emit('play', this.id);
+      }
+      
+  },
+  play: function(){
       if(this.isLoopRecorded && !this.isLoopPlaying){
         this.bouton_play = 'waiting ...';
         this.waiting_msg = 'waiting the end of bar before playing';
-        value = true;
         socket.emit('play', this.id);
+      }
+  },
+  stop: function(){
+      if(this.isLoopRecorded && this.isLoopPlaying){
+        this.bouton_play = 'waiting ...';
+        this.waiting_msg = 'waiting the end of bar before stopping';
+        socket.emit('stop', this.id);
       }
   },
   ready_to_stop: function(){
@@ -324,7 +406,35 @@ var channel2 = new Vue({
     this.bouton_rec = 'record';
     this.bouton_play = '';
 
-  }
+  },
+
+  delete_button: function(){
+    socket.emit('delete', this.id);
+  },
+  delete: function(){
+      if(this.isLoopRecorded ){
+        this.bouton_rec = '...waiting...';
+        this.bouton_play= '...waiting...';
+        this.waiting_msg= ' Clearing the track soon';
+        this.bouton_del= '...waiting';
+      }
+    },
+  ready_to_delete: function(){
+      if(this.isLoopRecorded){
+        this.isRecording = false;
+        this.bouton_rec= '';
+        this.bouton_play = '';
+        this.bouton_del = '';
+        this.waiting_msg ='';
+        this.isRecording= false;
+        this.isLoopRecorded = false;
+        this.isLoopPlaying = false;
+        if(this.isTempoFixed){
+          this.tempo_fixed();
+        }
+
+      }
+}
 
 }
 });
