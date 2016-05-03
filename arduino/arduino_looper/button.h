@@ -28,8 +28,8 @@ button::button(int _numPin){
   pinMode( numPin ,INPUT_PULLUP );
   
   //constant to set the duration (ms) to consider 'long press'
-  longPressTime = 2500;
-  shortPressTime = 50;
+  longPressTime = 2000;
+  shortPressTime = 30;
   currentMode = JUST_PRESS_MODE;
   
   init();

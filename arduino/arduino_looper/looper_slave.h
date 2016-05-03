@@ -35,7 +35,7 @@ public:
   
   //Be sure the tempo is fixed by channel1 before recording 
   //other channels
-  void tempo_fixed();
+  void set_tempo_fixed(boolean v);
   
 
   
@@ -47,6 +47,7 @@ looper_slave::looper_slave(int i, int pinG, int pinR, int pinB){
   ledG = new led(pinG);
   ledR = new led(pinR);
   but = new button(pinB);
+  isTempoFixed = false;
   
   channel = i;
   init();
@@ -55,10 +56,11 @@ looper_slave::looper_slave(int i, int pinG, int pinR, int pinB){
 
 void looper_slave::init(){
   
-  //Todo false by default
-  isTempoFixed = true;
+  
   actualState = -1;
   but->switchMode(JUST_PRESS_MODE);
+  ledR->turnOff();
+  ledG->turnOff();
 
 }
 
@@ -204,8 +206,8 @@ void looper_slave::ready_to_delete(){
 
 }
 
-void looper_slave::tempo_fixed(){
-  isTempoFixed = true;
+void looper_slave::set_tempo_fixed(boolean value){
+  isTempoFixed = value;
 }
 
 void looper_slave::sendMessage(int msg){

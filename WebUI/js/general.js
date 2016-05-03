@@ -13,13 +13,24 @@ socket.on('tempoBar', function(socket){
   console.log('Tempo Bar changed');
   menu.main_bar = !menu.main_bar;});   
 
-// socket.on('tempoFixed', function(socket){
-//   console.log('Tempo is fixed');
-//   menu.tempo_fixed = True;});   
+socket.on('tempo_fixed', function(socket){
+  console.log('Tempo is fixed');
+  menu.tempo_fixed = true;
+  channel2.tempo_fixed();
+  //TODO set other channel too
+  });   
 
-// socket.on('clear_all', function(socket){
-//   console.log('clear_all reset everything !');
-//   });
+socket.on('clear_all', function(socket){
+  console.log('clear_all reset everything !');
+  menu.tempo_fixed = false;
+  menu.main_tempo = 1;
+  menu.main_bar = 1;
+  channel1.init();
+
+  //TODO set other channel too
+  channel2.isTempoFixed = false;
+  channel2.ready_to_delete();
+  });
 
 socket.on('play', function(data){
   console.log(' channel %d, want to play ', data);
@@ -206,9 +217,9 @@ var menu = new Vue({
       delete_all: function(){
         //this.main_tempo = !this.main_tempo;
         //this.main_bar =!this.main_bar;
-        console.log('emitt delete_all');
-        socket.emit('delete_all', 9);
-        console.log('emited delete_all');
+
+        socket.emit('clear_all', 0);
+
 
 
       }, 
@@ -260,11 +271,8 @@ var channel1 = new Vue({
         this.isLoopPlaying = true;
         this.isRecording = false;
         this.bouton_rec ='';
-        this.bouton_play = 'mute';
-        // Set that the tempo is now fixed
-        //TODO set other channels than channel 2
-        channel2.tempo_fixed();
-        menu.tempo_fixed = true;}
+        this.bouton_play = 'mute';        
+        }
     },
     //MAIN LOOPER : 
     // The button action has no influence on the webUI
@@ -293,8 +301,12 @@ var channel1 = new Vue({
         this.bouton_play = 'play';
         this.isLoopPlaying = false;
     },
-    delete_all: function(){
-      socket.emit('delete_all', 1)
+    init: function(){
+        this.bouton_rec ='record';
+        this.bouton_play = '';
+        this.isRecording = false;
+        this.isLoopRecorded = false;
+        this.isLoopPlaying =false;
 
     }
   }
@@ -325,7 +337,7 @@ var channel2 = new Vue({
         socket.emit('stop_rec', this.id)
 
       }
-      if(!this.isLoopRecorded && this.isTempoFixed){
+      if(!this.isRecording && !this.isLoopRecorded && this.isTempoFixed){
 
         socket.emit('start_rec', this.id)
       }
@@ -364,11 +376,11 @@ var channel2 = new Vue({
         this.waiting_msg ='';}
   },
   play_button: function(){
-      if(this.isLoopRecorded && this.isLoopPlaying){
+      if(this.isLoopRecorded && this.isLoopPlaying && this.isTempoFixed){
 
         socket.emit('stop', this.id);
       }
-      if(this.isLoopRecorded && !this.isLoopPlaying){
+      if(this.isLoopRecorded && !this.isLoopPlaying && this.isTempoFixed){
  
         socket.emit('play', this.id);
       }

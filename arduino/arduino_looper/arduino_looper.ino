@@ -10,6 +10,12 @@
 #define DELETE 8
 #define READY_TO_DELETE 9
 
+//General settings define
+#define CLEAR_ALL 0
+#define TEMPO 1
+#define TEMPOBAR 2
+#define TEMPO_FIXED 3
+
 // button define
 #define LONG_PRESS 2
 #define SHORT_PRESS 1
@@ -84,12 +90,31 @@ void loop(){
 
     
   }
+  //Make arduino little bit slower
+  //reduce button shake most of all
   delay(10);
 }
 
 void readMessage(int m){
  
- //probably have to convert String into char* 
+ switch (m){
+  
+  case CLEAR_ALL:
+  channel1->init();
+  channel2->set_tempo_fixed(false);
+  channel2->init();
+  channel2->set_tempo_fixed(false);
+  channel3->init();
+  channel3->set_tempo_fixed(false);
+  channel4->init();
+  channel4->set_tempo_fixed(false);
+   break; 
+   case TEMPO_FIXED:
+  channel2->set_tempo_fixed(true);
+  channel3->set_tempo_fixed(true);
+  channel4->set_tempo_fixed(true);
+   break;
+ }
   
   
 }

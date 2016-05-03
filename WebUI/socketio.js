@@ -36,6 +36,19 @@ var udp_server = dgram.createSocket('udp4', function(msg, rinfo) {
     return console.log('Could not decode OSC message');
   }
 
+  /*
+            GENERAL SETTINGS FROM OSC
+  */
+  if(osc_message.address == '/clear_all') {
+    //console.log('OSC Message : clear all');
+    io.emit('clear_all', 1);
+  }
+
+  if(osc_message.address == '/tempo_fixed') {
+    //console.log('OSC Message : tempo fixed');
+    io.emit('tempo_fixed', 0);
+  }
+
   if(osc_message.address == '/tempo') {
     //console.log('OSC Message : tempo');
   	io.emit('tempo', 1);
@@ -45,6 +58,9 @@ var udp_server = dgram.createSocket('udp4', function(msg, rinfo) {
     //console.log('OSC Message : tempoBar');
   	io.emit('tempoBar', 1);
   }
+  /*
+              SETTINGS TO CHANNELS
+  */
 
   if(osc_message.address == '/ready_to_record') {
     console.log('OSC Message : channel %d ready_to_record', osc_message.args[0].value);
@@ -128,8 +144,13 @@ io.on('connection', function(socket) {
 
   });
 
-  socket.on('delete_all', function(data){
+  socket.on('clear_all', function(data){
     console.log('socketio.js on :delete all %d', data);
+    var osc_msg = osc.toBuffer({
+      oscType: 'message',
+      address: '/'+data.toString()+'/clear_all'
+    });
+    udp_server.send(osc_msg, 0, osc_msg.length, 9999, remote_osc_ip);
 
   });
 
