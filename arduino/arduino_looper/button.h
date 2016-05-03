@@ -4,19 +4,22 @@ class button{
 
 public:
   int numPin;
+  boolean isPressed;
+  boolean previousState;
   boolean currentState;
-  boolean justPressed;
-  boolean shortPressed;
-  boolean longPressed;
-  unsigned long previous_change;
+  unsigned long timePressed;
   int longPressTime;
+  int shortPressTime;
 
   button(int numPin);
   void init();
   void update();
-  boolean readJustPressed();
-  boolean readShortPressed();
-  boolean readLongPressed();
+  int readButton();
+  
+  //Mode : look for press / look for release ( long press or short press )
+  int currentMode;
+  void switchMode ( int newMode );
+  
 
 };
 
@@ -26,6 +29,8 @@ button::button(int _numPin){
   
   //constant to set the duration (ms) to consider 'long press'
   longPressTime = 2500;
+  shortPressTime = 50;
+  currentMode = JUST_PRESS_MODE;
   
   init();
   
@@ -33,81 +38,81 @@ button::button(int _numPin){
 
 void button::init(){
  
- justPressed = false;
- shortPressed = false;
- longPressed= false;
- previous_change = millis();
- currentState=!digitalRead(numPin);
+ isPressed = false;
+ timePressed = millis();
+ previousState=!digitalRead(numPin);
+ currentState = previousState;
   
 }
 
 void button::update(){
  
- //Invert digitalRead, because pull_up mode force HIGH when button is not pressed
-  boolean newCurrentState = !digitalRead(numPin);
-  int previous_change_duration = millis() -previous_change ;
-  int avoid_repet = 20;
- 
- if(newCurrentState && !currentState && previous_change_duration > avoid_repet){
- // button just become pressed
-    justPressed = true;
-    currentState = true;
-    previous_change = millis();
- }
- if(newCurrentState && currentState && previous_change_duration > avoid_repet*100 ){
-    //keep pressing
-    //A long press is "activated" before release of the pressing
-    // in order to make the user "aware" that's the operation succeded.
-    // Once leds are blinking, the user know he can release the foot.
-   if(millis() - previous_change > longPressTime ){
-      longPressed = true;
-      previous_change = millis();
-   } 
- }
-  if(!newCurrentState && currentState && previous_change_duration > avoid_repet){
-    //from Pressed to released
-    if(millis() - previous_change <= longPressTime){
-       shortPressed = true;
-       previous_change = millis();
-    }else{
-       //End of a long press
-       // init() is supposed to have been already called . By security, call it again
-       init();
-       
-    }
+   // Only update currentState & previousState
+   previousState = currentState;  
+   currentState = !digitalRead(numPin);
+  
+}
+
+int button::readButton(){
+  
+  int ret = 0;
+
+  if( !isPressed ){
    
- }
-   //update current state
-   currentState = newCurrentState;
-  
-}
-
-boolean button::readJustPressed(){
-  
-  boolean ret = justPressed;
-  if(justPressed){
-   //clear value once it is read
-    init();
+     if( !previousState && currentState  ){
+       isPressed = true;
+       timePressed = millis();
+     } 
+    
   }
+  
+  //Mode looking for the pressing, from Up to low
+  if(currentMode == JUST_PRESS_MODE ){
+   
+    if(isPressed) ret = 1;
+    isPressed = false; 
+    
+  }
+  //Mode looking for longPress / shortPress, from low to up
+  else{
+    
+    if(isPressed && (!currentState && previousState) ){
+      
+       if(millis()-timePressed >  longPressTime){
+           //User is pressing for a long time       
+          ret = LONG_PRESS;
+          isPressed = false;
+         
+       }
+       else if( (millis()- timePressed) <longPressTime && (millis() -timePressed) > shortPressTime){
+          // if not, look for a release of pressing
+             //release is found, this is a short Press 
+             ret = SHORT_PRESS;
+             isPressed = false;
+         
+       }
+       else{
+         // Probably a mistake, need to re-push again
+         isPressed = false;
+       }
+      
+    }
+    
+  }
+  
  return ret; 
 }
 
-boolean button::readShortPressed(){
+void button::switchMode( int newMode){
   
-  boolean ret = shortPressed;
-  if(shortPressed){
-   //clear value once it is read
-    init();
+  init();
+  
+  if(newMode == JUST_PRESS_MODE || newMode == LONG_PRESS_MODE ){
+   
+     currentMode = newMode; 
+    
   }
- return ret; 
+  
+  
 }
 
-boolean button::readLongPressed(){
-  
-  boolean ret = longPressed;
-  if(longPressed){
-   //clear value once it is read
-  }
-
- return ret; 
-}

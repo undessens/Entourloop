@@ -1,14 +1,10 @@
 
+
 class looper_slave{
 
 public:
   int channel;
   boolean isTempoFixed;
-  
-  //Scenario
-  boolean isLoopRecorded;
-  boolean isLoopRecording;
-  boolean isLoopPlaying;
   
   //Led Green and Red
   led *ledG, *ledR;
@@ -21,12 +17,13 @@ public:
   void update();
   
   //Looper: set the current state
-  void record();
-  void stop_record();
-  void ready_to_record();
-  void ready_to_stop_record();
-  void play();
-  void ready_to_play();
+  int actualState;  // -1 by default
+  void record();                //0
+  void stop_record();           //1
+  void ready_to_record();       //2
+  void ready_to_stop_record();  //3
+  void play();                  //4
+  void ready_to_play();         // ...
   void stop();
   void ready_to_stop();
   void delete_loop();
@@ -60,9 +57,8 @@ void looper_slave::init(){
   
   //Todo false by default
   isTempoFixed = true;
-  isLoopRecorded = false;
-  isLoopRecording = false;
-  isLoopPlaying = false;
+  actualState = -1;
+  but->switchMode(JUST_PRESS_MODE);
 
 }
 
@@ -74,36 +70,57 @@ void looper_slave::update(){
    
    but->update();
    
-   if(!isLoopRecorded && !isLoopRecording){
-      if(but->readJustPressed()){
-        sendMessage(START_REC); 
-      }
-   }
-   if(!isLoopRecorded && isLoopRecording){
-     
-       if(but->readJustPressed()){
-        sendMessage(STOP_REC); 
-      }
-   }
-   if(isLoopRecorded && !isLoopRecording && !isLoopPlaying){
-       if(but->readShortPressed()){
-        sendMessage(PLAY); 
-      }
-       if(but->readLongPressed()){
-        sendMessage(DELETE); 
-      }
-     
-   }
-   if(isLoopRecorded && !isLoopRecording && isLoopPlaying){
-       if(but->readShortPressed()){
-        sendMessage(STOP); 
-      }
-       if(but->readLongPressed()){
-        sendMessage(DELETE); 
-      }
-     
-   }
- 
+   int valueRead = 0;
+   
+     switch(actualState){
+  
+       case -1:
+           //init state
+           valueRead = but->readButton();
+           if(valueRead) sendMessage(START_REC);
+           break;
+        
+       case START_REC:
+    
+          break;
+        case READY_TO_RECORD:
+           valueRead = but->readButton();
+           if(valueRead) sendMessage ( STOP_REC);
+    
+          break;
+        case STOP_REC:
+      
+          break;
+        case READY_TO_STOP_RECORD:
+    
+          break;
+        case PLAY:
+    
+          break;
+        case READY_TO_PLAY:
+            valueRead = but->readButton();
+           if(valueRead == SHORT_PRESS) sendMessage ( STOP );
+           if(valueRead == LONG_PRESS) sendMessage ( DELETE );   
+          break;
+        case STOP:
+    
+          break;
+        case READY_TO_STOP:
+            valueRead = but->readButton();
+           if(valueRead == SHORT_PRESS) sendMessage ( PLAY );
+           if(valueRead == LONG_PRESS) sendMessage ( DELETE );
+    
+          break;
+        case DELETE:
+    
+          break;
+        case READY_TO_DELETE:
+    
+          break;
+    
+    
+  }
+   
    
    
  }
@@ -117,36 +134,26 @@ void looper_slave::record(){
   // the channel is not recording yet, waiting until ready_to_record
   ledR->ledBlink();
   ledG->stopBlink();
+  actualState = START_REC;
+ 
+}
+void looper_slave::ready_to_record(){
+  ledR->ledBlink(200);
+  ledG->stopBlink(); 
+  actualState = READY_TO_RECORD;
   
-  isLoopRecording = false;
-  isLoopRecorded = false;
-  isLoopPlaying = false;
-
 }
 void looper_slave::stop_record(){
   ledR->ledBlink();
   ledG->stopBlink();
-  isLoopRecording = true;
-  isLoopRecorded = false;
-  isLoopPlaying = false;
+  actualState = STOP_REC;
 
 }
-void looper_slave::ready_to_record(){
-  ledR->ledBlink(200);
-  ledG->stopBlink();
-  isLoopRecording = true;
-  isLoopRecorded = false;
-  isLoopPlaying = false;
-  but->init();
 
-}
 void looper_slave::ready_to_stop_record(){
   ledR->turnOn();
   ledG->turnOn();
-  isLoopRecording = false;
-  isLoopRecorded = true;
-  isLoopPlaying = true;
-  but->init();
+  actualState = READY_TO_STOP_RECORD;
 
 }
 void looper_slave::play(){
@@ -154,52 +161,44 @@ void looper_slave::play(){
   
   ledR->turnOn();
   ledG->ledBlink();
-  isLoopRecording = false;
-  isLoopRecorded = true;
-  isLoopPlaying = false;
-  
+  actualState = PLAY; 
 
 }
 void looper_slave::ready_to_play(){
   ledR->turnOn();
   ledG->turnOn();
-  isLoopRecording = false;
-  isLoopRecorded = true;
-  isLoopPlaying = true;
-  but->init();
+  actualState = READY_TO_PLAY;
+  but->switchMode( LONG_PRESS_MODE );
   
 }
 void looper_slave::stop(){
   // not stoping at this point, wait until ready_to_stop
   ledG->ledBlink();
   ledR->turnOn();
-  isLoopRecording = false;
-  isLoopRecorded = true;
-  isLoopPlaying = true;
+  actualState = STOP;
 
 }
 void looper_slave::ready_to_stop(){
   ledR->turnOn();
   ledG->turnOff();
-  isLoopRecording = false;
-  isLoopRecorded = true;
-  isLoopPlaying = false;
-  but->init();
+  actualState = READY_TO_STOP;
+  but->switchMode( LONG_PRESS_MODE );
+  
 }
 
 void looper_slave::delete_loop(){
   // not deleted at this point, wait until ready_to_delete
   ledR->ledBlink(200);
   ledG->ledBlink(200);
-  isLoopRecording = false;
-  //TODO
-  isLoopRecorded = false;
+  actualState = DELETE;
 
 }
 void looper_slave::ready_to_delete(){
   ledR->turnOff();
   ledG->turnOff();
-  but->init();
+  actualState = READY_TO_DELETE;
+  but->switchMode( JUST_PRESS_MODE );
+
   init();
 
 

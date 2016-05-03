@@ -1,3 +1,4 @@
+//looper slave define
 #define START_REC 0
 #define READY_TO_RECORD 1
 #define STOP_REC 2
@@ -9,6 +10,11 @@
 #define DELETE 8
 #define READY_TO_DELETE 9
 
+// button define
+#define LONG_PRESS 2
+#define SHORT_PRESS 1
+#define JUST_PRESS_MODE 1
+#define LONG_PRESS_MODE 2
 
 
 #include "led.h"
@@ -78,7 +84,7 @@ void loop(){
 
     
   }
-  
+  delay(10);
 }
 
 void readMessage(int m){

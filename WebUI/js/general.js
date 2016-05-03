@@ -157,7 +157,7 @@ socket.on('start_rec', function(data){
   switch(data) {
     case 1:
         channel1.record();
-
+        break;
     case 2:
         channel2.record();
         break;
@@ -175,7 +175,7 @@ socket.on('stop_rec', function(data){
   switch(data) {
     case 1:
         channel1.stop_record();
-
+        break;
     case 2:
         channel2.stop_record();
         break;
@@ -238,7 +238,7 @@ var channel1 = new Vue({
     //Just send info to puredata, and puredata trigger record
     // function on the webUI
     record_button: function(){
-      if(!this.isLoopRecorded){
+      if(!this.isRecording && !this.isLoopRecorded){
           socket.emit('start_rec', this.id);
       }
       if(this.isRecording && !this.isLoopRecorded){
@@ -378,14 +378,12 @@ var channel2 = new Vue({
       if(this.isLoopRecorded && !this.isLoopPlaying){
         this.bouton_play = 'waiting ...';
         this.waiting_msg = 'waiting the end of bar before playing';
-        socket.emit('play', this.id);
       }
   },
   stop: function(){
       if(this.isLoopRecorded && this.isLoopPlaying){
         this.bouton_play = 'waiting ...';
         this.waiting_msg = 'waiting the end of bar before stopping';
-        socket.emit('stop', this.id);
       }
   },
   ready_to_stop: function(){

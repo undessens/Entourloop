@@ -129,12 +129,12 @@ io.on('connection', function(socket) {
   });
 
   socket.on('delete_all', function(data){
-    console.log('delete all %d', data);
+    console.log('socketio.js on :delete all %d', data);
 
   });
 
   socket.on('start_rec', function(data){
-  	console.log('record channel: %d', data);
+  	console.log('socketio.js on : record channel: %d', data);
   	var osc_msg = osc.toBuffer({
       oscType: 'message',
       address: '/'+data.toString()+'/start_rec'
@@ -143,7 +143,7 @@ io.on('connection', function(socket) {
   });
 
   socket.on('stop_rec', function(data){
-  	console.log('stop record channel: %d', data);
+  	console.log('socketio.js on : stop record channel: %d', data);
   	var osc_msg = osc.toBuffer({
       oscType: 'message',
       address: '/'+data.toString()+'/stop_rec'
@@ -152,7 +152,7 @@ io.on('connection', function(socket) {
   });
 
    socket.on('stop', function(data){
-  	console.log('stop channel: %d', data);
+  	console.log('socketio.js on : stop channel: %d', data);
   	var osc_msg = osc.toBuffer({
       oscType: 'message',
       address: '/'+data.toString()+'/stop'
@@ -161,7 +161,7 @@ io.on('connection', function(socket) {
   });
 
    socket.on('play', function(data){
-  	console.log('play channel: %d', data);
+  	console.log('socketio.js on : play channel: %d', data);
   	var osc_msg = osc.toBuffer({
       oscType: 'message',
       address: '/'+data.toString()+'/play'
@@ -170,7 +170,7 @@ io.on('connection', function(socket) {
   });
 
    socket.on('delete', function(data){
-  	console.log('delete channel: %d', data);
+  	console.log('socketio.js on : delete channel: %d', data);
   	var osc_msg = osc.toBuffer({
       oscType: 'message',
       address: '/'+data.toString()+'/delete'

@@ -1,142 +1,146 @@
-#N canvas 181 75 1104 641 10;
-#X obj 53 -164 inlet;
-#X obj 45 -50 cnv 15 100 130 empty empty empty 20 12 0 14 -260097 -66577
+#N canvas 684 56 682 689 10;
+#X obj 53 -116 inlet;
+#X obj 45 -2 cnv 15 100 130 empty empty empty 20 12 0 14 -260097 -66577
 0;
-#X obj 53 14 timer;
-#X obj 9 124 cnv 15 280 250 empty empty empty 20 12 0 14 -232576 -66577
+#X obj 53 62 timer;
+#X obj 9 172 cnv 15 280 250 empty empty empty 20 12 0 14 -232576 -66577
 0;
-#X msg 61 166 stop;
-#X obj 192 243 tabwrite~ \$0-tab;
-#X msg 21 167 start;
-#X text 116 126 write loop;
-#X obj 155 -47 cnv 15 60 50 empty empty empty 20 12 0 14 -260097 -66577
+#X msg 61 214 stop;
+#X obj 192 291 tabwrite~ \$0-tab;
+#X msg 21 215 start;
+#X text 116 174 write loop;
+#X obj 155 1 cnv 15 60 50 empty empty empty 20 12 0 14 -260097 -66577
 0;
-#X obj 164 -24 t b b;
+#X obj 164 24 t b b;
 #N canvas 328 244 450 250 (subpatch) 0;
 #X array \$0-tab 440000 float 0;
 #X coords 0 1 439999 -1 200 140 1 0 0;
-#X restore 13 394 graph;
-#X obj 241 389 cnv 15 100 60 empty empty empty 20 12 0 14 -233017 -66577
+#X restore 13 442 graph;
+#X obj 241 437 cnv 15 100 60 empty empty empty 20 12 0 14 -233017 -66577
 0;
-#X obj 398 387 cnv 15 100 60 empty empty empty 20 12 0 14 -233017 -66577
+#X obj 398 435 cnv 15 100 60 empty empty empty 20 12 0 14 -233017 -66577
 0;
-#X obj 249 415 tgl 35 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+#X obj 249 463 tgl 35 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
 1;
-#X msg 10 272 1;
-#X msg 47 273 0;
-#X msg 133 274 1;
-#X obj 236 149 adc~;
-#X obj 533 386 cnv 15 100 90 empty empty empty 20 12 0 14 -233017 -66577
+#X msg 10 320 1;
+#X msg 47 321 0;
+#X msg 133 322 1;
+#X obj 236 197 adc~;
+#X obj 533 434 cnv 15 100 90 empty empty empty 20 12 0 14 -233017 -66577
 0;
-#X obj 565 409 tgl 35 0 empty \$0_is_loop_playing empty 17 7 0 10 -262144
+#X obj 565 457 tgl 35 0 empty \$0_is_loop_playing empty 17 7 0 10 -262144
 -1 -1 0 1;
-#X obj 655 383 cnv 15 100 60 empty empty empty 20 12 0 14 -233017 -66577
+#X obj 655 431 cnv 15 100 60 empty empty empty 20 12 0 14 -233017 -66577
 0;
-#X obj 699 410 tgl 35 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+#X obj 699 458 tgl 35 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
 1;
-#X text 168 -44 STOP rec;
-#X text 77 -47 START rec;
-#X obj 235 -47 cnv 15 100 60 empty empty empty 20 12 0 14 -260097 -66577
+#X text 168 4 STOP rec;
+#X text 77 1 START rec;
+#X obj 235 1 cnv 15 100 60 empty empty empty 20 12 0 14 -260097 -66577
 0;
-#X obj 354 -46 cnv 15 100 60 empty empty empty 20 12 0 14 -260097 -66577
+#X obj 354 2 cnv 15 100 60 empty empty empty 20 12 0 14 -260097 -66577
 0;
-#X text 258 -45 play loop;
-#X text 371 -46 stop loop;
-#X msg 260 -26 1;
-#X msg 383 -28 0;
-#X obj 475 -48 cnv 15 100 60 empty empty empty 20 12 0 14 -260097 -66577
+#X text 258 3 play loop;
+#X text 371 2 stop loop;
+#X msg 260 22 1;
+#X msg 383 20 0;
+#X obj 475 0 cnv 15 100 60 empty empty empty 20 12 0 14 -260097 -66577
 0;
-#X text 498 -46 kill main;
-#X text 536 384 Is loop playing;
-#X msg 487 -26 0;
-#X obj 300 4 s \$0_is_loop_playing;
-#X obj 476 35 s \$0_is_loop_recorded;
-#X obj 472 57 s \$0_is_loop_playing;
-#X obj 474 8 s \$0_contrainst;
-#X obj 52 53 s \$0_timer;
-#X obj 231 393 r \$0_is_loop_recorded;
-#X obj 374 387 r \$0_is_loop_recording;
-#X obj 655 386 r \$0_contrainst;
-#X obj 9 301 s \$0_is_loop_recording;
-#X obj 154 302 s \$0_is_loop_recorded;
-#X obj 155 324 s \$0_is_loop_playing;
-#X obj 156 351 s \$0_contrainst;
-#X obj 600 -112 cnv 15 350 490 empty empty empty 20 12 0 14 -262130
+#X text 498 2 kill main;
+#X text 536 432 Is loop playing;
+#X msg 487 22 0;
+#X obj 300 52 s \$0_is_loop_playing;
+#X obj 476 83 s \$0_is_loop_recorded;
+#X obj 472 105 s \$0_is_loop_playing;
+#X obj 474 56 s \$0_contrainst;
+#X obj 52 101 s \$0_timer;
+#X obj 231 441 r \$0_is_loop_recorded;
+#X obj 374 435 r \$0_is_loop_recording;
+#X obj 655 434 r \$0_contrainst;
+#X obj 9 349 s \$0_is_loop_recording;
+#X obj 154 350 s \$0_is_loop_recorded;
+#X obj 155 372 s \$0_is_loop_playing;
+#X obj 156 399 s \$0_contrainst;
+#X obj 600 -64 cnv 15 350 490 empty empty empty 20 12 0 14 -262130
 -66577 0;
-#X obj 781 210 * 44.1;
-#X obj 705 247 pack 0 f;
-#X obj 624 68 bng 45 250 50 0 empty empty empty 17 7 0 10 -262144 -1
+#X obj 781 258 * 44.1;
+#X obj 705 295 pack 0 f;
+#X obj 624 116 bng 45 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 705 328 tabplay~ \$0-tab;
+#X obj 696 258 select 1;
+#X floatatom 660 210 5 0 0 0 - - -, f 5;
+#X obj 809 524 outlet~;
+#X obj 883 -59 r \$0_timer;
+#X obj 595 174 s master_loop;
+#X obj 978 -60 cnv 15 280 430 empty empty empty 20 12 0 14 -233017
+-66577 0;
+#X floatatom 1033 41 5 0 0 0 - - -, f 5;
+#X obj 998 -21 t i i;
+#X obj 1021 138 /;
+#X floatatom 1044 -29 5 0 0 0 - - -, f 5;
+#X obj 1089 280 metro;
+#X obj 1089 312 bng 40 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X msg 1001 235 bang;
+#X msg 1044 236 stop;
+#X obj 1008 199 select 1;
+#X obj 1008 171 r \$0_contrainst;
+#X text 1107 -37 tentative de calculer le tempo depuis la boucle;
+#X obj 1161 -19 log;
+#X obj 1163 70 i;
+#X obj 1161 20 / 0.693147;
+#X floatatom 1162 47 5 0 0 0 - - -, f 5;
+#X floatatom 1164 101 5 0 0 0 - - -, f 5;
+#X obj 1174 187 pow;
+#X msg 1140 159 2;
+#X floatatom 1175 231 5 0 0 0 - - -, f 5;
+#X obj 1031 14 / 2000;
+#X obj 1091 372 s tempo;
+#X obj 711 113 r \$0_is_loop_playing;
+#X obj 690 39 mod \$1;
+#X obj 685 -16 f;
+#X obj 719 -15 + 1;
+#X obj 685 -38 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X floatatom 685 10 5 0 0 0 - - -, f 5;
+#X obj 693 66 select 0;
+#X obj 685 -63 r tempo2;
+#X obj 735 13 r \$0_loop_size;
+#X obj 1198 296 s \$0_loop_size;
+#X obj 472 130 s \$0_init_count;
+#X obj 765 -61 r \$0_init_count;
+#X msg 779 -34 0;
+#X obj 266 512 outlet;
+#X obj 379 518 outlet;
+#X obj 487 519 outlet;
+#X obj 633 523 outlet;
+#X obj 408 461 tgl 35 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+1;
+#X obj 52 -50 route /start_rec /stop_rec /play /stop /delete;
+#X msg 338 -116 /delete;
+#X msg 298 -115 /stop;
+#X msg 251 -115 /play;
+#X msg 180 -115 /stop_rec;
+#X msg 98 -116 /start_rec;
+#X msg 560 312 symbol /ready_to_play;
+#X obj 560 386 pack s 1;
+#X obj 650 400 s toOSC;
+#X msg 561 338 symbol /ready_to_stop;
+#X obj 694 151 i 0;
+#X obj 855 263 i -1;
+#X obj 605 260 select 1;
+#X obj 608 235 change;
+#X obj -20 -42 pack s 1;
+#X obj -20 -11 s toOSC;
+#X obj -10 -74 symbol;
+#X obj 1140 126 t b f;
+#X obj 129 245 t b a;
+#X text 642 -56 Play Loop;
+#X obj 155 -11 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
+-1 -1;
+#X obj 65 30 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144 -1
 -1;
-#X obj 705 280 tabplay~ \$0-tab;
-#X obj 696 210 select 1;
-#X floatatom 660 162 5 0 0 0 - - -, f 5;
-#X obj 809 476 outlet~;
-#X obj 883 -107 r \$0_timer;
-#X obj 595 126 s master_loop;
-#X obj 978 -108 cnv 15 280 430 empty empty empty 20 12 0 14 -233017
--66577 0;
-#X floatatom 1033 -7 5 0 0 0 - - -, f 5;
-#X obj 998 -69 t i i;
-#X obj 1021 90 /;
-#X floatatom 1044 -77 5 0 0 0 - - -, f 5;
-#X obj 1089 232 metro;
-#X obj 1089 264 bng 40 250 50 0 empty empty empty 17 7 0 10 -262144
--1 -1;
-#X msg 1001 187 bang;
-#X msg 1044 188 stop;
-#X obj 1008 151 select 1;
-#X obj 1008 123 r \$0_contrainst;
-#X text 1107 -85 tentative de calculer le tempo depuis la boucle;
-#X obj 1161 -67 log;
-#X obj 1163 22 i;
-#X obj 1161 -28 / 0.693147;
-#X floatatom 1162 -1 5 0 0 0 - - -, f 5;
-#X floatatom 1164 53 5 0 0 0 - - -, f 5;
-#X obj 1174 139 pow;
-#X msg 1140 111 2;
-#X floatatom 1175 183 5 0 0 0 - - -, f 5;
-#X obj 1031 -34 / 2000;
-#X obj 1091 324 s tempo;
-#X obj 711 65 r \$0_is_loop_playing;
-#X obj 690 -9 mod \$1;
-#X obj 685 -64 f;
-#X obj 719 -63 + 1;
-#X obj 685 -86 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
--1 -1;
-#X floatatom 685 -38 5 0 0 0 - - -, f 5;
-#X obj 693 18 select 0;
-#X obj 685 -111 r tempo2;
-#X obj 735 -35 r \$0_loop_size;
-#X obj 1198 248 s \$0_loop_size;
-#X obj 472 82 s \$0_init_count;
-#X obj 765 -109 r \$0_init_count;
-#X msg 779 -82 0;
-#X obj 266 464 outlet;
-#X obj 379 470 outlet;
-#X obj 487 471 outlet;
-#X obj 633 475 outlet;
-#X obj 408 413 tgl 35 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
-1;
-#X obj 52 -98 route /start_rec /stop_rec /play /stop /delete;
-#X msg 338 -164 /delete;
-#X msg 298 -163 /stop;
-#X msg 251 -163 /play;
-#X msg 180 -163 /stop_rec;
-#X msg 98 -164 /start_rec;
-#X msg 560 264 symbol /ready_to_play;
-#X obj 560 338 pack s 1;
-#X obj 650 352 s toOSC;
-#X msg 561 290 symbol /ready_to_stop;
-#X obj 694 103 i 0;
-#X obj 855 215 i -1;
-#X obj 605 212 select 1;
-#X obj 608 187 change;
-#X obj -20 -90 pack s 1;
-#X obj -20 -59 s toOSC;
-#X obj -10 -122 symbol;
-#X obj 1140 78 t b f;
-#X obj 129 197 t b a;
-#X text 642 -104 Play Loop;
 #X connect 0 0 96 0;
 #X connect 0 0 112 0;
 #X connect 2 0 38 0;
@@ -209,6 +213,8 @@
 #X connect 96 0 2 0;
 #X connect 96 0 6 0;
 #X connect 96 1 9 0;
+#X connect 96 1 116 0;
+#X connect 96 1 117 0;
 #X connect 96 2 28 0;
 #X connect 96 3 29 0;
 #X connect 96 4 33 0;
@@ -232,4 +238,4 @@
 #X connect 113 1 73 1;
 #X connect 114 0 16 0;
 #X connect 114 1 5 0;
-#X coords 0 641 1 640 200 300 0;
+#X coords 0 689 1 688 200 300 0;
