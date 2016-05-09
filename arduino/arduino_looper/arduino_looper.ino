@@ -26,32 +26,33 @@
 #include "led.h"
 #include "button.h"
 #include "looper_slave.h"
+#include "looper_main.h"
 
 
-
-looper_slave *channel1,*channel2,*channel3,*channel4;
+looper_main *channel1;
+looper_slave *channel2,*channel3,*channel4;
 
 //---------------------------------------------
 void setup(){
   
-  channel1 = new looper_slave(1, 9, 11, 10 );
-  channel2 = new looper_slave(2, A4, A5, A0 );
-  channel3 = new looper_slave(3, 3, 4, 5 );
-  channel4 = new looper_slave(4, 3, 4, 5 );
+  channel1 = new looper_main(13, 12, 11 );
+  channel2 = new looper_slave(2, 10, 9, 8 );
+  channel3 = new looper_slave(3, 6, 7, 5 );
+  channel4 = new looper_slave(4, 3, 4, 2 );
   Serial.begin(57600);
-  // Set value used in Serial.readString() or Serial.readStringUntil('\n');
   Serial.setTimeout(20);
-  
+  delay(20);
+
 }
 
 //----------------------------------------------
 void loop(){
   
   //Update part
-  //channel1->update();
+  channel1->update();
   channel2->update();
-  //channel3->update();
-  //channel4->update();
+  channel3->update();
+  channel4->update();
   
   //Serial reading part
   if(Serial.available()>2){
@@ -90,6 +91,12 @@ void loop(){
 
     
   }
+  //TODO ELSE
+  //if there is Serial.available>0 && Serial.available=<2
+  // Some bytes get lost, and we should delete them
+  
+  
+  
   //Make arduino little bit slower
   //reduce button shake most of all
   delay(10);

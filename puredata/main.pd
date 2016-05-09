@@ -1,4 +1,4 @@
-#N canvas 581 56 750 689 10;
+#N canvas 498 56 750 689 10;
 #X obj 159 139 looper_main-0-0-3;
 #X obj 385 191 dac~;
 #X obj 691 -20 cnv 15 250 400 empty empty empty 20 12 0 14 -204800
@@ -45,7 +45,7 @@
 #X obj 447 380 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
 -1 -1;
 #X obj 118 496 packOSC;
-#X obj 143 574 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
+#X obj 143 574 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
 1;
 #X msg 2 427 disconnect;
 #X msg 77 427 connect localhost 9998;
@@ -54,11 +54,11 @@
 #X text 1 571 OSC to webUI;
 #X obj 55 237 cnv 15 600 110 empty empty empty 20 12 0 14 -204800 -66577
 0;
-#X obj 160 255 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+#X obj 160 255 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
 1;
 #X obj 184 283 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
 1;
-#X obj 209 328 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 0
+#X obj 209 328 tgl 15 0 empty empty empty 17 7 0 10 -262144 -1 -1 1
 1;
 #X text 72 254 Loop recorded;
 #X text 88 283 Loop recording;
@@ -85,12 +85,12 @@
 #X text 284 -50 Channel 2;
 #X text 410 -51 Channel 3;
 #X text 532 -53 Channel 4;
-#X msg 405 496 close;
+#X msg 404 496 close;
 #X obj 320 524 comport 0 57600;
 #X msg 394 473 open 0;
 #X obj 716 245 pack s 0;
 #X obj 831 245 pack s 0;
-#N canvas 291 240 1055 372 wordToNum 1;
+#N canvas 98 322 1055 372 wordToNum 0;
 #X obj 654 -16 inlet;
 #X obj 672 269 outlet;
 #X obj 12 105 cnv 15 700 60 empty empty empty 20 12 0 14 -233017 -66577
@@ -282,10 +282,9 @@
 #X obj 249 -83 r msgToChannel2;
 #X msg 270 -1 /start_rec;
 #X obj 189 553 print serialOSC_send;
-#N canvas 765 128 501 344 serial_receive 0;
+#N canvas 763 368 501 344 serial_receive 0;
 #X obj -275 123 list prepend;
 #X obj -157 128 t l;
-#X obj -311 73 == 13;
 #X obj -215 53 t f f;
 #X obj -307 125 bng 15 250 50 0 empty empty empty 17 7 0 10 -262144
 -1 -1;
@@ -295,7 +294,6 @@
 -1 -1;
 #X text -180 172 clear list;
 #X obj -187 89 - 0;
-#X obj -304 200 unpack 1 1 1 1;
 #N canvas 261 291 524 307 NumToWord 0;
 #X obj 167 87 sel 0 1 2 3 4 5 6 7 8 9;
 #X obj 167 6 inlet;
@@ -351,45 +349,49 @@
 #X text -131 423 Channel4;
 #X text -193 426 Channel3;
 #X text -265 426 Channel2;
+#X obj -311 73 == 14;
+#X obj -403 203 print;
+#X obj -304 200 unpack 1 1 1;
 #X connect 0 0 1 0;
-#X connect 0 0 6 1;
+#X connect 0 0 5 1;
 #X connect 1 0 0 1;
-#X connect 2 0 5 0;
-#X connect 3 0 2 0;
-#X connect 3 1 9 0;
-#X connect 4 0 6 0;
-#X connect 5 0 4 0;
-#X connect 6 0 7 0;
-#X connect 6 0 10 0;
-#X connect 7 0 0 1;
-#X connect 9 0 0 0;
-#X connect 10 1 14 0;
-#X connect 10 2 12 0;
-#X connect 10 2 32 0;
-#X connect 11 0 15 1;
-#X connect 11 0 19 1;
-#X connect 11 0 17 1;
-#X connect 11 0 21 1;
+#X connect 2 0 36 0;
+#X connect 2 1 8 0;
+#X connect 3 0 5 0;
+#X connect 4 0 3 0;
+#X connect 5 0 6 0;
+#X connect 5 0 37 0;
+#X connect 5 0 38 0;
+#X connect 6 0 0 1;
+#X connect 8 0 0 0;
+#X connect 9 0 13 1;
+#X connect 9 0 17 1;
+#X connect 9 0 15 1;
+#X connect 9 0 19 1;
+#X connect 10 0 9 0;
+#X connect 11 0 26 0;
+#X connect 11 1 17 0;
+#X connect 11 2 13 0;
+#X connect 11 3 15 0;
+#X connect 11 4 19 0;
 #X connect 12 0 11 0;
-#X connect 13 0 28 0;
-#X connect 13 1 19 0;
-#X connect 13 2 15 0;
-#X connect 13 3 17 0;
-#X connect 13 4 21 0;
-#X connect 14 0 13 0;
+#X connect 13 0 14 0;
+#X connect 14 0 23 0;
 #X connect 15 0 16 0;
-#X connect 16 0 25 0;
+#X connect 16 0 22 0;
 #X connect 17 0 18 0;
-#X connect 18 0 24 0;
+#X connect 18 0 25 0;
 #X connect 19 0 20 0;
-#X connect 20 0 27 0;
-#X connect 21 0 22 0;
-#X connect 22 0 26 0;
-#X connect 23 0 3 0;
-#X connect 28 0 29 0;
-#X connect 29 0 30 0;
-#X connect 31 0 28 1;
-#X connect 32 0 31 0;
+#X connect 20 0 24 0;
+#X connect 21 0 2 0;
+#X connect 26 0 27 0;
+#X connect 27 0 28 0;
+#X connect 29 0 26 1;
+#X connect 30 0 29 0;
+#X connect 36 0 4 0;
+#X connect 38 0 12 0;
+#X connect 38 1 10 0;
+#X connect 38 1 30 0;
 #X restore 223 653 pd serial_receive;
 #X text 479 379 Connect OSC and Serial;
 #X obj 453 603 cnv 15 300 250 empty empty empty 20 12 0 14 -258113
@@ -418,8 +420,7 @@
 #X msg 140 -54 /stop_rec;
 #X msg 147 -32 /play;
 #X msg 152 -7 /stop;
-#X msg 157 21 /delete;
-#X obj 667 593 r clear_all;
+#X obj 665 605 r clear_all;
 #X obj 71 861 cnv 15 200 200 empty empty empty 20 12 0 14 -233017 -66577
 0;
 #X text 142 866 General settings;
@@ -431,6 +432,9 @@
 #X obj 582 853 pack s 0;
 #X obj 582 878 s toOSC;
 #X msg 582 830 symbol /clear_all;
+#X obj -18 -127 loadbang;
+#X msg -18 -102 \; pd dsp 1;
+#X obj 61 154 adc~;
 #X connect 0 0 48 0;
 #X connect 0 1 49 0;
 #X connect 0 2 50 0;
@@ -490,14 +494,14 @@
 #X connect 79 0 0 0;
 #X connect 80 0 74 0;
 #X connect 81 0 116 0;
-#X connect 83 0 126 0;
+#X connect 83 0 125 0;
 #X connect 83 1 85 0;
 #X connect 83 2 86 0;
 #X connect 83 3 87 0;
 #X connect 83 4 88 0;
 #X connect 93 0 115 0;
 #X connect 94 0 115 0;
-#X connect 96 0 126 0;
+#X connect 96 0 125 0;
 #X connect 96 1 89 0;
 #X connect 96 2 90 0;
 #X connect 96 3 91 0;
@@ -512,7 +516,7 @@
 #X connect 107 0 106 1;
 #X connect 108 0 106 0;
 #X connect 109 0 110 0;
-#X connect 111 0 129 0;
+#X connect 111 0 128 0;
 #X connect 112 0 106 1;
 #X connect 113 0 112 0;
 #X connect 114 0 113 0;
@@ -530,11 +534,13 @@
 #X connect 119 0 117 0;
 #X connect 120 0 117 0;
 #X connect 121 0 117 0;
-#X connect 122 0 117 0;
-#X connect 123 0 100 0;
-#X connect 126 0 127 0;
-#X connect 128 0 132 0;
-#X connect 129 0 128 0;
-#X connect 129 1 109 0;
-#X connect 130 0 131 0;
-#X connect 132 0 130 0;
+#X connect 122 0 100 0;
+#X connect 125 0 126 0;
+#X connect 127 0 131 0;
+#X connect 128 0 127 0;
+#X connect 128 1 109 0;
+#X connect 129 0 130 0;
+#X connect 131 0 129 0;
+#X connect 132 0 133 0;
+#X connect 134 0 1 0;
+#X connect 134 1 1 1;
