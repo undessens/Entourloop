@@ -99,7 +99,7 @@ void loop(){
   
   //Make arduino little bit slower
   //reduce button shake most of all
-  delay(10);
+  delay(1);
 }
 
 void readMessage(int m){

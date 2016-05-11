@@ -56,7 +56,7 @@ void led::update(){
   
 }
 
-void led::ledBlink(int new_blink_period= 500){
+void led::ledBlink(int new_blink_period= 250){
   
   //new blink period is optionnal, if you want to change the speed
   blink_period = new_blink_period;

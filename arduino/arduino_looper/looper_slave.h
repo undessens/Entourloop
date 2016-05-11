@@ -140,7 +140,7 @@ void looper_slave::record(){
  
 }
 void looper_slave::ready_to_record(){
-  ledR->ledBlink(200);
+  ledR->ledBlink(90);
   ledG->stopBlink(); 
   actualState = READY_TO_RECORD;
   
@@ -190,8 +190,8 @@ void looper_slave::ready_to_stop(){
 
 void looper_slave::delete_loop(){
   // not deleted at this point, wait until ready_to_delete
-  ledR->ledBlink(200);
-  ledG->ledBlink(200);
+  ledR->ledBlink(100);
+  ledG->ledBlink(100);
   actualState = DELETE;
 
 }
