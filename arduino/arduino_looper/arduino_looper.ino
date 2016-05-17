@@ -35,10 +35,10 @@ looper_slave *channel2,*channel3,*channel4;
 //---------------------------------------------
 void setup(){
   
-  channel1 = new looper_main(13, 12, 11 );
-  channel2 = new looper_slave(2, 10, 9, 8 );
-  channel3 = new looper_slave(3, 6, 7, 5 );
-  channel4 = new looper_slave(4, 3, 4, 2 );
+  channel1 = new looper_main(2, 3, 4 );
+  channel2 = new looper_slave(2, 5, 6, 7 );
+  channel3 = new looper_slave(3, 8, 9, 10 );
+  channel4 = new looper_slave(4, 11, 12, 13 );
   Serial.begin(57600);
   Serial.setTimeout(20);
   delay(20);
@@ -120,6 +120,9 @@ void readMessage(int m){
   channel2->set_tempo_fixed(true);
   channel3->set_tempo_fixed(true);
   channel4->set_tempo_fixed(true);
+   break;
+   case TEMPOBAR :
+   channel1->ledR.blinkOnce();
    break;
  }
   

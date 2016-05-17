@@ -8,6 +8,7 @@ public:
   unsigned long previous_change;
   int blink_period;
   boolean is_blinking;
+  boolean is_blinking_once;
 
   led(int numPin);
   void init();
@@ -17,7 +18,9 @@ public:
   void update();
  
   void ledBlink(int );
+  void blinkOnce();
   void updateBlink();
+  void updateBlinkOnce();
   void stopBlink();
   //TODO blink Once
   
@@ -39,6 +42,7 @@ void led::init(){
   // blink periiod in ms 
   blink_period = 500;
   is_blinking = false;
+  is_blinking_once = true;
   
 }
 
@@ -53,6 +57,9 @@ void led::update(){
   if(is_blinking){
     updateBlink();
   } 
+  if(is_blinking_once){
+    updateBlinkOnce(); 
+  }
   
 }
 
@@ -77,12 +84,27 @@ void led::updateBlink(){
   
 }
 
+
 void led::stopBlink(){
  
  is_blinking = false;
  // Turn off the light
  changeState(false); 
   
+}
+
+void led::blinkOnce(){
+  previous_change = millis();
+  digitalWrite(numPin, !currentState);
+  is_blinking_once = true;
+  
+}
+
+void led::updateBlinkOnce(){
+   if(millis() - previous_change > 100){
+    is_blinking_once = false;
+    digitalWrite(numPin, currentState );
+   } 
 }
 
 void led::turnOn(){
