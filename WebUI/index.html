@@ -93,10 +93,34 @@
 			
 		</td>
 		<td class="channel_slave"><b> Channel 3 </b> 
-			
+			<div id="channel3">
+			<span > [[ waiting_msg ]]</span><br><br>
+			<input type="checkbox" v-model="isRecording" disabled >
+			<span > Recording</span><br>
+			<input type="checkbox" v-model="isLoopRecorded" disabled>
+			<span > Loop Recorded</span><br>
+			<input type="checkbox" v-model="isLoopPlaying" disabled>
+			<span > Loop Playing</span><br><br>
+			<center>
+			<button v-on:click="record_button">[[ bouton_rec ]]</button><br><br>
+			<button v-on:click="play_button">[[ bouton_play ]]</button><br><br>
+			<button v-on:click="delete_button">[[ bouton_del ]]</button><br><br>
+			</div>
 		</td>
 		<td class="channel_slave"><b> Channel 4 </b> 
-			
+			<div id="channel4">
+			<span > [[ waiting_msg ]]</span><br><br>
+			<input type="checkbox" v-model="isRecording" disabled >
+			<span > Recording</span><br>
+			<input type="checkbox" v-model="isLoopRecorded" disabled>
+			<span > Loop Recorded</span><br>
+			<input type="checkbox" v-model="isLoopPlaying" disabled>
+			<span > Loop Playing</span><br><br>
+			<center>
+			<button v-on:click="record_button">[[ bouton_rec ]]</button><br><br>
+			<button v-on:click="play_button">[[ bouton_play ]]</button><br><br>
+			<button v-on:click="delete_button">[[ bouton_del ]]</button><br><br>
+			</div>
 		</td>
 
 	</tr>
