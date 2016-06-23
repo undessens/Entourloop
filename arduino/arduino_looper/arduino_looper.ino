@@ -122,7 +122,7 @@ void readMessage(int m){
   channel4->set_tempo_fixed(true);
    break;
    case TEMPOBAR :
-   channel1->ledR.blinkOnce();
+   channel1->ledR->blinkOnce();
    break;
  }
   
