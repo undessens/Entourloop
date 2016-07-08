@@ -1,7 +1,13 @@
 
 Vue.config.delimiters = ['[[', ']]']
 
-var socket = io.connect('http://127.0.0.1:8080');
+//TODO replace by raspberry pi IP
+//var socket = io.connect('http://127.0.0.1:8080');
+var socket = io.connect(raspberry.local:8080);
+socket.on('connect', function()
+    {
+        log('socket connected');
+    });
 
 //-------------------------------------------
 // List of OSC Event arriving from PUREDATA
@@ -22,7 +28,8 @@ socket.on('tempo_fixed', function(socket){
   console.log('Tempo is fixed');
   menu.tempo_fixed = true;
   channel2.tempo_fixed();
-  //TODO set other channel too
+  channel3.tempo_fixed();
+  channel4.tempo_fixed();
   });   
 
 socket.on('clear_all', function(socket){
@@ -32,9 +39,13 @@ socket.on('clear_all', function(socket){
   menu.main_bar = 1;
   channel1.init();
 
-  //TODO set other channel too
+  //Delete channel even if nothing is recorded
   channel2.isTempoFixed = false;
   channel2.ready_to_delete();
+  channel3.isTempoFixed = false;
+  channel3.ready_to_delete();
+  channel4.isTempoFixed = false;
+  channel4.ready_to_delete();
   });
 
 socket.on('play', function(data){
@@ -257,6 +268,7 @@ var channel1 = new Vue({
     record_button: function(){
       if(!this.isRecording && !this.isLoopRecorded){
           socket.emit('start_rec', this.id);
+          console.log('channel1 record');
       }
       if(this.isRecording && !this.isLoopRecorded){
         //send web socket
@@ -377,6 +389,7 @@ var channel2 = new Vue({
   ready_to_stop_record: function(){
         if(this.isRecording){
         this.isRecording = false;
+        this.isLoopRecorded = true;
         this.bouton_rec= '';
         this.bouton_play = 'stop';
         this.bouton_del = 'delete';
@@ -435,7 +448,7 @@ var channel2 = new Vue({
       }
     },
   ready_to_delete: function(){
-      if(this.isLoopRecorded){
+              
         this.isRecording = false;
         this.bouton_rec= '';
         this.bouton_play = '';
@@ -444,12 +457,12 @@ var channel2 = new Vue({
         this.isRecording= false;
         this.isLoopRecorded = false;
         this.isLoopPlaying = false;
-        if(this.isTempoFixed){
+        if(this.isTempoFixed){  
           this.tempo_fixed();
         }
 
-      }
-}
+
+  }
 
 }
 });
@@ -512,6 +525,7 @@ var channel3 = new Vue({
   ready_to_stop_record: function(){
         if(this.isRecording){
         this.isRecording = false;
+        this.isLoopRecorded = true;
         this.bouton_rec= '';
         this.bouton_play = 'stop';
         this.bouton_del = 'delete';
@@ -570,7 +584,6 @@ var channel3 = new Vue({
       }
     },
   ready_to_delete: function(){
-      if(this.isLoopRecorded){
         this.isRecording = false;
         this.bouton_rec= '';
         this.bouton_play = '';
@@ -583,7 +596,7 @@ var channel3 = new Vue({
           this.tempo_fixed();
         }
 
-      }
+      
 }
 
 }
@@ -648,6 +661,7 @@ var channel4 = new Vue({
   ready_to_stop_record: function(){
         if(this.isRecording){
         this.isRecording = false;
+        this.isLoopRecorded = true;
         this.bouton_rec= '';
         this.bouton_play = 'stop';
         this.bouton_del = 'delete';
@@ -706,7 +720,7 @@ var channel4 = new Vue({
       }
     },
   ready_to_delete: function(){
-      if(this.isLoopRecorded){
+
         this.isRecording = false;
         this.bouton_rec= '';
         this.bouton_play = '';
@@ -719,7 +733,7 @@ var channel4 = new Vue({
           this.tempo_fixed();
         }
 
-      }
+      
 }
 
 }
