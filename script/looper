@@ -1,0 +1,19 @@
+#!/bin/bash
+
+# Launch a command and redirect output
+# nohup some_command > output.log 2>&1&
+echo "Start puredata without GUI"
+pd -nogui /home/pi/Documents/looper/puredata/main.pd > pd_looper.log  2>&1&
+#nohup pd -nogui /home/pi/Documents/looper/puredata/main.pd > pd_looper.log  2>&1&
+
+#)&(
+#echo "Start node server"
+#nohup node /home/pi/Documents/looper/WebUI/socketio.js >  node_looper.log  2>&1&
+
+#)&(
+#echo "Start http server"
+#cd /home/pi/Documents/looper/WebUI/
+#nohup python -m SimpleHTTPServer 8000 >  python_looper.log  2>&1&
+
+#
+#)

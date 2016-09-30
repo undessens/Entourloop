@@ -1,0 +1,20 @@
+==========================
+Pure Data settings
+=========================
+
+
+--------------
+Audio Settings
+--------------
+
+Sample Rate = 44100
+Delay 8msec
+Block size 64
+
+
+
+--------------
+Path Settings
+--------------
+Documents puredata_lib
+
